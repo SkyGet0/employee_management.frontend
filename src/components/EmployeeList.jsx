@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { employeeAPI } from '../services/api';
 import './EmployeeList.css';
 
@@ -9,8 +10,8 @@ function EmployeeList() {
   const [totalPages, setTotalPages] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [department, setDepartment] = useState('');
+  const navigate = useNavigate();
 
-  // Используйте useCallback чтобы избежать infinite loop
   const fetchEmployees = useCallback(async () => {
     setLoading(true);
     try {
@@ -23,26 +24,39 @@ function EmployeeList() {
     } finally {
       setLoading(false);
     }
-  }, [pageNumber, department, searchTerm]); // Зависимости
+  }, [pageNumber, department, searchTerm]);
 
   useEffect(() => {
     fetchEmployees();
-  }, [fetchEmployees]); // Теперь зависимость правильная
+  }, [fetchEmployees]);
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure?')) {
+    if (window.confirm('Are you sure you want to delete this employee?')) {
       try {
         await employeeAPI.delete(id);
         fetchEmployees();
       } catch (error) {
-        alert('Error deleting employee');
+        alert('Error deleting employee: ' + (error.message || error));
       }
     }
   };
 
+  const handleEdit = (id) => {
+    navigate(`/employee/${id}`);
+  };
+
+  const handleAddEmployee = () => {
+    navigate('/employee');
+  };
+
   return (
     <div className="employee-list">
-      <h1>Employees</h1>
+      <div className="list-header">
+        <h1>Employees</h1>
+        <button onClick={handleAddEmployee} className="btn-add-employee">
+          + Add Employee
+        </button>
+      </div>
 
       {/* Search and Filter */}
       <div className="filters">
@@ -94,7 +108,12 @@ function EmployeeList() {
                   <td>${emp.salary.toLocaleString()}</td>
                   <td>{emp.department || 'N/A'}</td>
                   <td>
-                    <button className="btn-edit">Edit</button>
+                    <button 
+                      className="btn-edit" 
+                      onClick={() => handleEdit(emp.id)}
+                    >
+                      Edit
+                    </button>
                     <button 
                       className="btn-delete" 
                       onClick={() => handleDelete(emp.id)}

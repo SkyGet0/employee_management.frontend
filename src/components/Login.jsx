@@ -23,10 +23,10 @@ function Login() {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
         
+        // ✅ ДОБАВЬТЕ ЭТО
         setTimeout(() => {
-          navigate('/', { replace: true });
-          window.location.reload(); // Принудительно перезагрузите для обновления App компонента
-        }, 100);
+          window.location.href = '/'; // Редирект и перезагрузка
+        }, 300);
       } else {
         setError(response.data.message);
       }

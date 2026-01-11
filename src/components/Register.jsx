@@ -30,7 +30,11 @@ function Register() {
       if (response.data.success) {
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
-        navigate('/');
+        
+        // ✅ ДОБАВЬТЕ ЭТО
+        setTimeout(() => {
+          window.location.href = '/'; // Редирект и перезагрузка
+        }, 300);
       } else {
         setError(response.data.message);
       }
