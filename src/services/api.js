@@ -14,7 +14,7 @@ const api = axios.create({
   },
 });
 
-// Добавьте токен к каждому запросу
+// add token to each request
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('token');
@@ -26,7 +26,7 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// Обработка 401 ошибок (токен истек)
+// Error 401 handling (token expired)
 api.interceptors.response.use(
   (response) => response,
   (error) => {
