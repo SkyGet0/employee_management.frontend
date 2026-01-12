@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 import { employeeAPI } from '../services/api';
 import './EmployeeList.css';
 
@@ -10,7 +11,9 @@ function EmployeeList() {
   const [totalPages, setTotalPages] = useState(0);
   const [searchTerm, setSearchTerm] = useState('');
   const [department, setDepartment] = useState('');
+
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const fetchEmployees = useCallback(async () => {
     setLoading(true);
@@ -48,14 +51,17 @@ function EmployeeList() {
   const handleAddEmployee = () => {
     navigate('/employee');
   };
-
+  
   return (
     <div className="employee-list">
       <div className="list-header">
         <h1>Employees</h1>
+        {/* Button "Add" is visible for Admins */}
+        {user?.role === 'Admin' && (
         <button onClick={handleAddEmployee} className="btn-add-employee">
           + Add Employee
         </button>
+        )}
       </div>
 
       {/* Search and Filter */}
@@ -108,18 +114,25 @@ function EmployeeList() {
                   <td>${emp.salary.toLocaleString()}</td>
                   <td>{emp.department || 'N/A'}</td>
                   <td>
-                    <button 
-                      className="btn-edit" 
-                      onClick={() => handleEdit(emp.id)}
-                    >
-                      Edit
-                    </button>
-                    <button 
-                      className="btn-delete" 
-                      onClick={() => handleDelete(emp.id)}
-                    >
-                      Delete
-                    </button>
+                    {/* Edit / Delete buttons are visible for Admins*/}
+                    {user?.role === 'Admin' ? (
+                      <>
+                        <button 
+                          className="btn-edit" 
+                          onClick={() => handleEdit(emp.id)}
+                        >
+                          Edit
+                        </button>
+                        <button 
+                          className="btn-delete" 
+                          onClick={() => handleDelete(emp.id)}
+                        >
+                          Delete
+                        </button>
+                      </>
+                    ) : (
+                      <span className="role-badge">View</span>
+                    )}
                   </td>
                 </tr>
               ))}
