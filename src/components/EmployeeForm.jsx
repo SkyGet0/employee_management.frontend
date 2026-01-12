@@ -20,7 +20,7 @@ function EmployeeForm() {
 
   useEffect(() => {
     if (id) {
-      // Если есть ID, загрузите данные для редактирования
+      // if it exists, load employee
       loadEmployee();
     }
   }, [id]);
@@ -70,7 +70,7 @@ function EmployeeForm() {
         await employeeAPI.create(formData);
       }
       
-      // Перенаправьте на главную после успеха
+      // navigating to the main page
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.message || 'Error saving employee');

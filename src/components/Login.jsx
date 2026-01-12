@@ -19,13 +19,12 @@ function Login() {
       const response = await authAPI.login({ username, password });
       
       if (response.data.success) {
-        // Сохраните токен и данные пользователя
+        // saving token and user data
         localStorage.setItem('token', response.data.token);
         localStorage.setItem('user', JSON.stringify(response.data.user));
         
-        // ✅ ДОБАВЬТЕ ЭТО
         setTimeout(() => {
-          window.location.href = '/'; // Редирект и перезагрузка
+          window.location.href = '/'; // redirect and reload
         }, 300);
       } else {
         setError(response.data.message);

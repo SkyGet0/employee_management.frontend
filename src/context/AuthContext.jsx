@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Проверьте логин при загрузке
+    // check login when loading
     const token = localStorage.getItem('token');
     const userData = localStorage.getItem('user');
     
